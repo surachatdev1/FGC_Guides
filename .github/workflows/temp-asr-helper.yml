@@ -19,21 +19,21 @@ jobs:
       - name: Checkout helper branch
         uses: actions/checkout@v4
 
-      - name: Download multilingual base model
+      - name: Download multilingual small quantized model
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p local-asr
           curl -L --fail --retry 5 --retry-delay 5 \
-            https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin \
-            -o local-asr/ggml-base.bin
-          echo "60ed5bc3dd14eea856493d334349b405782ddcaf0028d4b5df4088345fba2efe  local-asr/ggml-base.bin" | sha256sum -c -
+            https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small-q5_1.bin \
+            -o local-asr/ggml-small-q5_1.bin
+          echo "ae85e4a935d7a567bd102fe55afc16bb595bdb618e11b2fc7591bc08120411bb  local-asr/ggml-small-q5_1.bin" | sha256sum -c -
           ls -lh local-asr
 
-      - name: Upload local ASR base model
+      - name: Upload local ASR small model
         uses: actions/upload-artifact@v4
         with:
-          name: temporary-local-asr-base-model
+          name: temporary-local-asr-small-q5-model
           path: local-asr/
           retention-days: 1
           if-no-files-found: error
