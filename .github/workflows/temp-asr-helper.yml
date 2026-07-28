@@ -26,11 +26,13 @@ jobs:
           git clone --depth 1 https://github.com/ggml-org/whisper.cpp.git /tmp/whisper.cpp
           cmake -S /tmp/whisper.cpp -B /tmp/whisper.cpp/build \
             -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=OFF \
             -DWHISPER_BUILD_TESTS=OFF \
             -DWHISPER_BUILD_SERVER=OFF
           cmake --build /tmp/whisper.cpp/build --config Release -j2
           mkdir -p local-asr
           cp /tmp/whisper.cpp/build/bin/whisper-cli local-asr/whisper-cli
+          ldd local-asr/whisper-cli || true
 
       - name: Download multilingual tiny model
         shell: bash
@@ -46,7 +48,7 @@ jobs:
       - name: Upload local ASR bundle
         uses: actions/upload-artifact@v4
         with:
-          name: temporary-local-asr-linux
+          name: temporary-local-asr-linux-static
           path: local-asr/
           retention-days: 1
           if-no-files-found: error
